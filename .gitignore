@@ -1,0 +1,4 @@
+.DS_STORE
+.idea
+error_log
+.phpunit.result.cache

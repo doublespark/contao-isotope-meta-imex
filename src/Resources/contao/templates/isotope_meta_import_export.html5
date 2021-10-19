@@ -1,0 +1,81 @@
+<div class="be-meta-imex" style="padding:10px;">
+
+    <?php if(count($this->messages) > 0): ?>
+        <div class="messages">
+            <?php foreach($this->messages as $message): ?>
+                <p><?php echo $message; ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if(count($this->warnings) > 0): ?>
+        <div class="warnings">
+            <?php foreach($this->warnings as $warning): ?>
+                <p><?php echo $warning; ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if(count($this->errors) > 0): ?>
+        <div class="errors">
+            <?php foreach($this->errors as $error): ?>
+                <p><?php echo $error; ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="import-wrapper" style="margin-bottom:20px;">
+        <h3>Import</h3>
+        <form method="post" action="/contao?do=isotope_meta_imex" enctype="multipart/form-data">
+            <div>
+            <label for="meta_csv">Select file</label>
+            <input id="meta_csv" type="file" name="meta_csv"/>
+            </div>
+            <input class="button import-button" type="submit" value="Import" />
+            <input type="hidden" name="FORM_SUBMIT" value="IMPORT_CSV" />
+            <input type="hidden" name="REQUEST_TOKEN" value="<?php echo $this->rt; ?>">
+        </form>
+    </div>
+
+    <div class="export-wrapper">
+        <h3>Export</h3>
+        <form method="post" action="/contao?do=isotope_meta_imex">
+            <input class="button export-button" type="submit" value="Export" />
+            <input type="hidden" name="FORM_SUBMIT" value="EXPORT_CSV" />
+            <input type="hidden" name="REQUEST_TOKEN" value="<?php echo $this->rt; ?>">
+        </form>
+    </div>
+</div>
+<style type="text/css">
+    .import-wrapper,
+    .export-wrapper {
+        clear:both;
+    }
+    .be-meta-imex h3 {
+        margin-bottom:10px;
+    }
+    .be-meta-imex .button {
+        clear:both;
+        margin-top:10px;
+        padding: 7px 12px;
+        border: 1px solid #aaa;
+        border-radius: 2px;
+        box-sizing: border-box;
+        cursor: pointer;
+        background: #eee;
+        transition: background .2s ease;
+    }
+    .be-meta-imex .button:hover {
+        background-color: #f6f6f6;
+    }
+
+    .be-meta-imex .messages,
+    .be-meta-imex .errors,
+    .be-meta-imex .warnings {
+        margin-bottom:15px;
+    }
+
+    .be-meta-imex .errors p { color:red; margin-bottom:4px; }
+    .be-meta-imex .messages p { color:green; margin-bottom:4px; }
+    .be-meta-imex .warnings p { color:orange; margin-bottom:4px; }
+</style>

@@ -1,0 +1,25 @@
+{
+  "name": "doublespark/contao-isotope-meta-imex",
+  "type": "ds-contao-bundle",
+  "description": "Import/Export Isotope product meta data",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jamie Devine",
+      "homepage": "https://www.doublespark.co.uk"
+    }
+  ],
+  "require": {
+    "php": ">=7.4.0",
+    "isotope/isotope-core": "^2.7.0",
+    "league/csv": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Doublespark\\IsotopeMetaImportExportBundle\\": "src/"
+    }
+  },
+  "extra": {
+    "contao-manager-plugin": "Doublespark\\IsotopeMetaImportExportBundle\\ContaoManager\\Plugin"
+  }
+}
