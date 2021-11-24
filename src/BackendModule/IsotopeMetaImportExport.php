@@ -5,6 +5,7 @@ namespace Doublespark\IsotopeMetaImportExportBundle\BackendModule;
 use Contao\BackendModule;
 use Contao\Database;
 use Contao\Input;
+use Contao\PageModel;
 use Isotope\Model\Product;
 use League\Csv\Reader;
 use League\Csv\Writer;
@@ -29,7 +30,9 @@ class IsotopeMetaImportExport extends BackendModule {
         'Meta title'       => 'meta_title',
         'Title Chars'      => null,
         'Meta description' => 'meta_description',
-        'Desc Chars'       => null
+        'Desc Chars'       => null,
+        'Category'         => null,
+        'Sub-Category'     => null
     ];
 
     protected array $errors   = [];
@@ -92,6 +95,7 @@ class IsotopeMetaImportExport extends BackendModule {
                 {
                     if(key_exists($k,$this->arrFieldMap))
                     {
+                        // Ignore fields that aren't imported (null columns)
                         if(!is_null($this->arrFieldMap[$k]))
                         {
                             $productRow[$this->arrFieldMap[$k]] = $v;
@@ -180,6 +184,10 @@ class IsotopeMetaImportExport extends BackendModule {
             {
                 $row = [];
 
+                // Get categories
+                $categoryPath  = $this->getCategoryPath($objProducts->current());
+                $arrCategories = explode('>', $categoryPath);
+
                 foreach($this->arrFieldMap as $label => $field)
                 {
                     if(!empty($field))
@@ -196,6 +204,16 @@ class IsotopeMetaImportExport extends BackendModule {
                     {
                         $row[] = '=LEN(F'.$rowNumber.')';
                     }
+
+                    if($label === 'Category')
+                    {
+                        $row[] = $arrCategories[0] ?? '';
+                    }
+
+                    if($label === 'Sub-Category')
+                    {
+                        $row[] = $arrCategories[1] ?? '';
+                    }
                 }
 
                 $rowNumber++;
@@ -209,6 +227,57 @@ class IsotopeMetaImportExport extends BackendModule {
         $csv->insertAll($arrExportRows);
         $csv->output('product-meta-'.date('dmY').'.csv');
         die;
+    }
+
+    /**
+     * Get the category path
+     * @param Product $objProduct
+     * @return string
+     */
+    protected function getCategoryPath(Product $objProduct) : string
+    {
+        // Make sure we have the parent
+        $objParentProduct = $objProduct;
+
+        $arrCategories = $objParentProduct->getCategories(true);
+
+        if(count($arrCategories) > 0)
+        {
+            $categoryPath = '';
+
+            // Use first sub category if there is one
+            if(isset($arrCategories[1]))
+            {
+                $categoryId = $arrCategories[1];
+            }
+            else
+            {
+                $categoryId = $arrCategories[0];
+            }
+
+            $objCategory = PageModel::findByPk($categoryId);
+
+            if($objCategory)
+            {
+                $categoryPath = $objCategory->title;
+
+                // If this category is not a parent of the root, then we are in a subcategory
+                // so get the one above
+                if($objCategory->pid != 1)
+                {
+                    $objParentCategory = PageModel::findByPk($objCategory->pid);
+
+                    if($objParentCategory)
+                    {
+                        $categoryPath = $objParentCategory->title.' > '.$categoryPath;
+                    }
+                }
+            }
+
+            return $categoryPath;
+        }
+
+        return '';
     }
 
 }
