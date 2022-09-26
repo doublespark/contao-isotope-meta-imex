@@ -3,10 +3,6 @@
 /**
  * Backend modules
  */
-array_insert($GLOBALS['BE_MOD']['isotope'], 5, array
-(
-    'isotope_meta_imex' => array
-    (
-        'callback'   => 'Doublespark\IsotopeMetaImportExportBundle\BackendModule\IsotopeMetaImportExport'
-    )
-));
+$GLOBALS['BE_MOD']['isotope']['isotope_meta_imex'] = [
+    'callback' => 'Doublespark\IsotopeMetaImportExportBundle\BackendModule\IsotopeMetaImportExport'
+];
