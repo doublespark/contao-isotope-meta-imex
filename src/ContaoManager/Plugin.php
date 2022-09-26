@@ -19,7 +19,7 @@ class Plugin implements BundlePluginInterface
     {
         return [
             BundleConfig::create(IsotopeMetaImportExportBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class])
+                ->setLoadAfter(['isotope'])
         ];
     }
 }
