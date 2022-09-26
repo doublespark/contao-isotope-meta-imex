@@ -78,13 +78,15 @@ class IsotopeMetaImportExport extends BackendModule {
 
             $csv = Reader::createFromPath($file);
 
-            $arrImport = $csv->fetchAssoc(0);
+            $csv->setHeaderOffset(0);
 
             $i  = 0;
             $rc = 1;
 
+            $records = $csv->getRecords();
+
             // Handle each row of the CSV
-            foreach($arrImport as $row)
+            foreach($records as $row)
             {
                 $rc++;
 
